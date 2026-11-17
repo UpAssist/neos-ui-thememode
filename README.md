@@ -6,6 +6,12 @@ A toggle in the top toolbar cycles **auto → light → dark**. Auto follows the
 
 Works with Neos 8.3+ and Neos 9, with no build step.
 
+![The Neos content UI in light mode](Documentation/Images/content-ui-light.jpg)
+
+![The Media module in light mode](Documentation/Images/media-module-light.jpg)
+
+*Light mode in Neos 9: the content UI and the Media module.*
+
 ## Installation
 
 ```bash
