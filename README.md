@@ -49,7 +49,8 @@ html[data-neos-theme="light"] .my-plugin-thing { color: rgb(30, 30, 30); }
 ## Scope and limits
 
 - The content iframe (your site) is never touched. The inline editing toolbar that Neos renders inside the iframe stays dark.
-- Colours set inline (`style="..."` or SVG `fill` attributes) are not in a stylesheet and are not mapped. The Neos logo is fixed explicitly; other cases can be fixed with a `data-neos-theme` rule.
+- Colours set inline (`style="..."` or SVG `fill` attributes) are not in a stylesheet and are not mapped. Such cases can be fixed with a `data-neos-theme` rule.
+- In light mode the Neos logo in the top bar is replaced with the original primary logo (`Resources/Public/Images/neos-logo-primary.svg`, from the [Neos brand assets](https://github.com/neos/brand)). The Neos name and logo are trademarks of the Neos project and are not covered by this package's MIT license.
 - Cross-origin stylesheets cannot be read and are skipped.
 - The login page and the splash screen are not themed.
 
@@ -71,7 +72,8 @@ The effective theme is also set on `<html data-neos-theme="light|dark" data-neos
 | `Resources/Public/JavaScript/ThemeMode.js` | Theme engine and API, loaded in the content UI and in the modules |
 | `Resources/Public/JavaScript/Toggle.js` | Toolbar toggle for the Neos UI (host plugin API, React from the host) |
 | `Resources/Public/JavaScript/ModuleToggle.js` | Toggle in the top bar of the backend modules |
-| `Resources/Public/Styles/ThemeMode.css` | Toggle styles and explicit light fixes |
+| `Resources/Public/Styles/ThemeMode.css` | Toggle styles and explicit light fixes (logo) |
+| `Resources/Public/Images/neos-logo-primary.svg` | Original Neos logo for light backgrounds |
 | `Configuration/Settings.yaml` | Registers the resources for the UI and for all modules |
 
 ## License

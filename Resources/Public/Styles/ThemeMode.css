@@ -58,9 +58,14 @@
     right: 0;
 }
 
-/* Light fixes: colours set as SVG attributes are not in any stylesheet */
-html[data-neos-theme="light"] .neos-branding-logo [fill="#fff" i],
-html[data-neos-theme="light"] .neos-branding-logo [fill="#ffffff" i],
-html[data-neos-theme="light"] .neos-branding-logo [fill="white" i] {
-    fill: rgb(30, 30, 30);
+/*
+ * Light: the original (primary) Neos logo instead of the inline logo for dark
+ * backgrounds. Same element and box, so the layout does not move.
+ */
+html[data-neos-theme="light"] .neos-branding-logo {
+    background: url("../Images/neos-logo-primary.svg") no-repeat center / contain;
+}
+
+html[data-neos-theme="light"] .neos-branding-logo > * {
+    display: none;
 }
