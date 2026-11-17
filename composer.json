@@ -4,6 +4,11 @@
     "description": "Light, dark and auto theme mode for the Neos CMS backend (content UI and backend modules)",
     "license": "MIT",
     "keywords": ["neos", "neos-ui", "dark mode", "light mode", "theme"],
+    "homepage": "https://github.com/UpAssist/neos-ui-thememode",
+    "support": {
+        "issues": "https://github.com/UpAssist/neos-ui-thememode/issues",
+        "source": "https://github.com/UpAssist/neos-ui-thememode"
+    },
     "require": {
         "neos/neos": "^8.3 || ^9.0",
         "neos/neos-ui": "^8.3 || ^9.0"
