@@ -24,7 +24,7 @@
     }
 
     // Bump when the mapping changes: it is part of the twin cache key.
-    var VERSION = '4';
+    var VERSION = '5';
     var STORAGE_KEY = 'upassist.neos.themeMode';
     var CACHE_PREFIX = 'upassist.neos.themeMode.css.v' + VERSION + ':';
     var MAX_CACHE_LENGTH = 1500000;
@@ -267,24 +267,44 @@
         return NAMED[named.toLowerCase()].slice();
     }
 
-    function mapColors(segment) {
+    // Separator lines in the dark design are dark greys on dark surfaces.
+    // Mapped like surfaces they end up a few shades from the light panels and
+    // disappear, so dark neutral lines get a mid grey (#c8 to #d6) instead:
+    // darker than every light surface.
+    var LINE_MAX = 70;
+    var LINE_DARKEST = 200;
+    var LINE_LIGHTEST = 214;
+
+    function mapLineRgba(rgba) {
+        var hsl = toHsl(rgba[0], rgba[1], rgba[2]);
+        var lightness = hsl[2] * 255;
+        if (rgba[3] < 0.5 || hsl[1] > 0.2 || lightness > LINE_MAX) {
+            return mapRgba(rgba);
+        }
+        var target = LINE_DARKEST + (LINE_LIGHTEST - LINE_DARKEST) * lightness / LINE_MAX;
+        var shift = target - lightness;
+        return [clamp(rgba[0] + shift), clamp(rgba[1] + shift), clamp(rgba[2] + shift), rgba[3]];
+    }
+
+    function mapColors(segment, mapper) {
         return segment.replace(COLOR_RE, function (match, hex, fn, args, named) {
             var rgba = parseColor(match, hex, fn, args, named);
-            return rgba ? formatRgba(mapRgba(rgba)) : match;
+            return rgba ? formatRgba(mapper(rgba)) : match;
         });
     }
 
     // Colours inside url(...) (data URI icons, file names) stay untouched.
-    function mapValue(value) {
+    function mapValue(value, mapper) {
+        mapper = mapper || mapRgba;
         var out = '';
         var last = 0;
         var match;
         URL_RE.lastIndex = 0;
         while ((match = URL_RE.exec(value)) !== null) {
-            out += mapColors(value.slice(last, match.index)) + match[0];
+            out += mapColors(value.slice(last, match.index), mapper) + match[0];
             last = match.index + match[0].length;
         }
-        return out + mapColors(value.slice(last));
+        return out + mapColors(value.slice(last), mapper);
     }
 
     function firstColor(value) {
@@ -299,6 +319,7 @@
     // ---------------------------------------------------------------------
 
     var TEXT_PROPS = /^(color|-webkit-text-fill-color|-webkit-text-stroke-color|caret-color|text-decoration-color|text-emphasis-color|fill|stroke)$/;
+    var LINE_PROPS = /^(border(-(top|right|bottom|left|block|inline)(-(start|end))?)?-color|outline-color|column-rule-color)$/;
 
     function isColorProperty(property) {
         return /color$/.test(property)
@@ -346,7 +367,8 @@
         var style = rule.style;
         var declarations = '';
 
-        var background = firstColor(style.getPropertyValue('background-color'));
+        var backgroundValue = style.getPropertyValue('background-color');
+        var background = firstColor(backgroundValue);
         // White text on a brand-coloured background stays white.
         var keepText = background !== null && isAccent(background);
         // Light surfaces and light widgets keep their colours.
@@ -367,8 +389,14 @@
             var mapped;
             if (keepAll) {
                 mapped = TEXT_PROPS.test(property) ? softenColors(value) : value;
+            } else if (keepText && TEXT_PROPS.test(property)) {
+                mapped = value;
+            } else if (LINE_PROPS.test(property) && value !== backgroundValue) {
+                // A border equal to its own background is meant to be
+                // invisible and is mapped like the background.
+                mapped = mapValue(value, mapLineRgba);
             } else {
-                mapped = keepText && TEXT_PROPS.test(property) ? value : mapValue(value);
+                mapped = mapValue(value);
             }
             declarations += property + ':' + mapped + (style.getPropertyPriority(property) ? ' !important' : '') + ';';
         }

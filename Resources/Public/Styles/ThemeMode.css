@@ -7,10 +7,10 @@
  * Rules whose selector mentions data-neos-theme are skipped by the engine, so
  * the explicit light fixes at the bottom are applied exactly as written.
  */
+/* Same look as the other toolbar buttons: no separator, hover in brand blue */
 .upassist-thememode {
     display: flex;
     height: 100%;
-    border-left: 1px solid #3f3f3f;
 }
 
 .upassist-thememode__button {
@@ -24,13 +24,13 @@
     margin: 0;
     border: 0;
     border-radius: 0;
-    background-color: #323232;
+    background-color: #222;
     color: #fff;
     cursor: pointer;
 }
 
 .upassist-thememode__button:hover {
-    background-color: #00adee;
+    color: #00adee;
 }
 
 .upassist-thememode__button:focus-visible {
@@ -42,10 +42,9 @@
     display: block;
 }
 
-/* Backend modules: the top bar has no border between items */
+/* Backend modules */
 .upassist-thememode--module {
     height: 40px;
-    border-left: 0;
 }
 
 .upassist-thememode--module .upassist-thememode__button {
