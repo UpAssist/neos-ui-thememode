@@ -1,0 +1,66 @@
+/*
+ * UpAssist.Neos.UiThemeMode: toggle styles and light fixes
+ *
+ * The toggle is written in the dark Neos palette on purpose: the theme engine
+ * maps these colours for light mode like any other Neos stylesheet.
+ *
+ * Rules whose selector mentions data-neos-theme are skipped by the engine, so
+ * the explicit light fixes at the bottom are applied exactly as written.
+ */
+.upassist-thememode {
+    display: flex;
+    height: 100%;
+    border-left: 1px solid #3f3f3f;
+}
+
+.upassist-thememode__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 100%;
+    min-height: 40px;
+    padding: 0 12px;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background-color: #323232;
+    color: #fff;
+    cursor: pointer;
+}
+
+.upassist-thememode__button:hover {
+    background-color: #00adee;
+}
+
+.upassist-thememode__button:focus-visible {
+    outline: 1px solid #00adee;
+    outline-offset: -1px;
+}
+
+.upassist-thememode__button svg {
+    display: block;
+}
+
+/* Backend modules: the top bar has no border between items */
+.upassist-thememode--module {
+    height: 40px;
+    border-left: 0;
+}
+
+.upassist-thememode--module .upassist-thememode__button {
+    background-color: transparent;
+}
+
+.upassist-thememode--pinned {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* Light fixes: colours set as SVG attributes are not in any stylesheet */
+html[data-neos-theme="light"] .neos-branding-logo [fill="#fff" i],
+html[data-neos-theme="light"] .neos-branding-logo [fill="#ffffff" i],
+html[data-neos-theme="light"] .neos-branding-logo [fill="white" i] {
+    fill: rgb(30, 30, 30);
+}

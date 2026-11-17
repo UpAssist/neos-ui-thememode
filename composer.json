@@ -1,0 +1,16 @@
+{
+    "name": "upassist/neos-ui-thememode",
+    "type": "neos-package",
+    "description": "Light, dark and auto theme mode for the Neos CMS backend (content UI and backend modules)",
+    "license": "MIT",
+    "keywords": ["neos", "neos-ui", "dark mode", "light mode", "theme"],
+    "require": {
+        "neos/neos": "^8.3 || ^9.0",
+        "neos/neos-ui": "^8.3 || ^9.0"
+    },
+    "extra": {
+        "neos": {
+            "package-key": "UpAssist.Neos.UiThemeMode"
+        }
+    }
+}

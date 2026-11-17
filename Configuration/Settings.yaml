@@ -1,0 +1,22 @@
+Neos:
+  Neos:
+    Ui:
+      resources:
+        javascript:
+          'UpAssist.Neos.UiThemeMode:Engine':
+            resource: 'resource://UpAssist.Neos.UiThemeMode/Public/JavaScript/ThemeMode.js'
+          'UpAssist.Neos.UiThemeMode:Toggle':
+            resource: 'resource://UpAssist.Neos.UiThemeMode/Public/JavaScript/Toggle.js'
+        stylesheets:
+          'UpAssist.Neos.UiThemeMode:ThemeMode':
+            resource: 'resource://UpAssist.Neos.UiThemeMode/Public/Styles/ThemeMode.css'
+
+    # Backend modules (Media, Workspaces, User management, ...) share the
+    # stored mode with the content UI through localStorage.
+    moduleConfiguration:
+      additionalResources:
+        styleSheets:
+          'UpAssist.Neos.UiThemeMode:ThemeMode': 'resource://UpAssist.Neos.UiThemeMode/Public/Styles/ThemeMode.css'
+        javaScripts:
+          'UpAssist.Neos.UiThemeMode:Engine': 'resource://UpAssist.Neos.UiThemeMode/Public/JavaScript/ThemeMode.js'
+          'UpAssist.Neos.UiThemeMode:ModuleToggle': 'resource://UpAssist.Neos.UiThemeMode/Public/JavaScript/ModuleToggle.js'
