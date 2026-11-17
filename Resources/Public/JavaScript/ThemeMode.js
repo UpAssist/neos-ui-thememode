@@ -23,7 +23,8 @@
         return;
     }
 
-    var VERSION = '2';
+    // Bump when the mapping changes: it is part of the twin cache key.
+    var VERSION = '4';
     var STORAGE_KEY = 'upassist.neos.themeMode';
     var CACHE_PREFIX = 'upassist.neos.themeMode.css.v' + VERSION + ':';
     var MAX_CACHE_LENGTH = 1500000;
@@ -97,10 +98,14 @@
     // Lightness of a neutral colour in the dark design -> lightness in the
     // light design. Anchors are the Neos UI greys (#141414, #222, #323232,
     // #3f3f3f, #5b5b5b, #999, #adadad, #ccc, #eee, #fff).
+    // The dark end stays soft: main text becomes anthracite (#3c3c3c, about
+    // 10:1 on the main background) instead of near-black, and muted text
+    // (#999 in dark) stays at about 4.5:1.
     var CURVE = [
         [0, 255], [20, 255], [34, 244], [50, 233], [63, 214], [91, 184],
-        [153, 108], [173, 94], [204, 72], [238, 48], [255, 30]
+        [153, 106], [173, 98], [204, 86], [238, 70], [255, 60]
     ];
+    var TEXT_FLOOR = 60;
 
     function curve(lightness) {
         for (var i = 1; i < CURVE.length; i++) {
@@ -305,6 +310,34 @@
             || property === 'border-image-source';
     }
 
+    // Widgets that ship their own light design inside the dark UI.
+    var LIGHT_WIDGETS = /CodeMirror|(^|[\s.,>~+])cm-|rdtPicker|ck-content/;
+
+    // A light neutral surface in the dark design (focused input, date
+    // picker, editor, content canvas) is meant to be light: keep it.
+    function isLightSurface(rgba) {
+        var hsl = toHsl(rgba[0], rgba[1], rgba[2]);
+        return rgba[3] > 0.6 && hsl[1] <= 0.2 && hsl[2] * 255 >= 200;
+    }
+
+    // Near-black text on those surfaces gets the same anthracite as the rest
+    // of the light theme.
+    function softenColors(value) {
+        return value.replace(COLOR_RE, function (match, hex, fn, args, named) {
+            var rgba = parseColor(match, hex, fn, args, named);
+            if (!rgba) {
+                return match;
+            }
+            var hsl = toHsl(rgba[0], rgba[1], rgba[2]);
+            var lightness = hsl[2] * 255;
+            if (hsl[1] > 0.2 || lightness >= TEXT_FLOOR) {
+                return match;
+            }
+            var shift = TEXT_FLOOR - lightness;
+            return formatRgba([clamp(rgba[0] + shift), clamp(rgba[1] + shift), clamp(rgba[2] + shift), rgba[3]]);
+        });
+    }
+
     function styleRule(rule) {
         // Rules written for a specific theme are applied as authored.
         if (rule.selectorText.indexOf('data-neos-theme') !== -1) {
@@ -313,9 +346,11 @@
         var style = rule.style;
         var declarations = '';
 
-        // White text on a brand-coloured background stays white.
         var background = firstColor(style.getPropertyValue('background-color'));
+        // White text on a brand-coloured background stays white.
         var keepText = background !== null && isAccent(background);
+        // Light surfaces and light widgets keep their colours.
+        var keepAll = LIGHT_WIDGETS.test(rule.selectorText) || (background !== null && isLightSurface(background));
 
         for (var i = 0; i < style.length; i++) {
             var property = style[i];
@@ -329,7 +364,12 @@
             }
             // Every colour declaration is copied, changed or not, so the
             // cascade between the twins matches the cascade of the originals.
-            var mapped = keepText && TEXT_PROPS.test(property) ? value : mapValue(value);
+            var mapped;
+            if (keepAll) {
+                mapped = TEXT_PROPS.test(property) ? softenColors(value) : value;
+            } else {
+                mapped = keepText && TEXT_PROPS.test(property) ? value : mapValue(value);
+            }
             declarations += property + ':' + mapped + (style.getPropertyPriority(property) ? ' !important' : '') + ';';
         }
 

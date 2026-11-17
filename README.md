@@ -34,7 +34,9 @@ Neos ships one dark design with hardcoded colours and hashed CSS-module class na
    - neutral greys are mapped along a lightness curve anchored on the Neos palette (`#141414`, `#222`, `#323232`, `#3f3f3f`, `#999`, `#fff`, ...);
    - saturated accents (brand blue, warning, error, success) keep their value;
    - translucent black (shadows, backdrops) stays as it is;
-   - text on an accent background in the same rule stays as it is.
+   - text on an accent background in the same rule stays as it is;
+   - light surfaces in the dark design (a focused field, the date picker, the content canvas) and widgets with their own light design (CodeMirror, CKEditor content) keep their colours; only near-black text in them is softened;
+   - the darkest text is anthracite (`#3c3c3c`), not black. Muted text stays at a contrast of at least 4.5:1.
 3. The resulting "twin" sheet is inserted directly after its source. Selectors, specificity and source order are unchanged, so each twin wins exactly where its original rule applied.
 4. Switching theme only flips the twins' `media` attribute (`all` / `not all`). In dark mode the original Neos styles are untouched.
 

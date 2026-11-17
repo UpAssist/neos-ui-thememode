@@ -59,6 +59,30 @@
 }
 
 /*
+ * Light: a focused field turns white, as in the dark design. On the light
+ * panels that alone is too subtle, so it also gets a thin brand-blue edge.
+ */
+html[data-neos-theme="light"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):focus,
+html[data-neos-theme="light"] textarea:focus {
+    box-shadow: inset 0 0 0 1px rgb(0, 173, 238);
+}
+
+/*
+ * Light: in the modules the action footer and the page below it are #141414
+ * in dark, which would become a white band. Give them the colour of the
+ * module area (#222 in dark), so the background runs through to the bottom
+ * of the screen; a thin line keeps the footer apart.
+ */
+html[data-neos-theme="light"] body.neos-module,
+html[data-neos-theme="light"] body.neos-module .neos-footer {
+    background-color: rgb(244, 244, 244);
+}
+
+html[data-neos-theme="light"] body.neos-module .neos-footer {
+    box-shadow: inset 0 1px 0 rgb(214, 214, 214);
+}
+
+/*
  * Light: the original (primary) Neos logo instead of the inline logo for dark
  * backgrounds. Same element and box, so the layout does not move.
  */
