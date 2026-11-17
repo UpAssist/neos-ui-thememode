@@ -101,6 +101,18 @@ html[data-neos-theme="light"] [class*="_dropDown__item"]:has(> [class*="_selectB
 }
 
 /*
+ * Light: the bottom bar of the hamburger icon is a background in
+ * currentColor on ::after. Chrome does not always repaint it when the colour
+ * changes, so it could keep the white of dark mode. Draw it as a border, like
+ * the two bars above it; same position and size.
+ */
+html[data-neos-theme="light"] [class*="_menuToggler__icon"]::after {
+    height: 0;
+    border-top: 3px solid;
+    background-color: transparent;
+}
+
+/*
  * Light: the original (primary) Neos logo instead of the inline logo for dark
  * backgrounds. Same element and box, so the layout does not move.
  */
