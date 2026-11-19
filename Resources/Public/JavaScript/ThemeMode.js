@@ -500,6 +500,29 @@
         }
     }
 
+    // A twin is an inline <style>, so a relative url(...) in it would resolve
+    // against the page instead of the source stylesheet. Resolve such URLs
+    // against the sheet's own address. Done after the cache read, so entries
+    // cached by older versions are corrected as well.
+    function absolutizeUrls(css, baseHref) {
+        if (!baseHref || css.indexOf('url(') === -1) {
+            return css;
+        }
+        return css.replace(URL_RE, function (match) {
+            var raw = match.slice(4, -1).trim();
+            var quote = raw.charAt(0) === '"' || raw.charAt(0) === "'" ? raw.charAt(0) : '';
+            var url = quote ? raw.slice(1, -1) : raw;
+            if (!url || /^(data:|[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(url)) {
+                return match;
+            }
+            try {
+                return 'url("' + new URL(url, baseHref).href.replace(/"/g, '%22') + '")';
+            } catch (e) {
+                return match;
+            }
+        });
+    }
+
     function buildTwin(node) {
         var key = cacheKey(node);
         var css = readCache(key);
@@ -520,7 +543,7 @@
             var twin = document.createElement('style');
             twin.setAttribute(MARKER, '');
             twin.media = effectiveTheme() === 'light' ? 'all' : 'not all';
-            twin.textContent = css;
+            twin.textContent = node.tagName === 'LINK' ? absolutizeUrls(css, node.href) : css;
             node.parentNode.insertBefore(twin, node.nextSibling);
             twins.push(twin);
         }
