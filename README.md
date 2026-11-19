@@ -12,6 +12,12 @@ Works with Neos 8.3+ and Neos 9, with no build step.
 
 *Light mode in Neos 9: the content UI and the Media module.*
 
+## Compatibility
+
+| Version | Neos |
+| --- | --- |
+| 1.0.x | 8.3, 8.4, 9.0, 9.1, 9.2 |
+
 ## Installation
 
 ```bash
