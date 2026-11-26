@@ -2,6 +2,12 @@
 
 All notable changes to this package are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this package follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Coloured buttons (primary, success, warning, danger) in light mode have white text, as in dark mode, instead of anthracite text that turned white on hover. On hover they fade to a darker shade of their own colour. The engine now keeps the text white in any rule that only sets a brand-coloured background.
+
 ## [1.0.3] - 2026-11-26
 
 ### Fixed

@@ -24,7 +24,7 @@
     }
 
     // Bump when the mapping changes: it is part of the twin cache key.
-    var VERSION = '5';
+    var VERSION = '6';
     var STORAGE_KEY = 'upassist.neos.themeMode';
     var CACHE_PREFIX = 'upassist.neos.themeMode.css.v' + VERSION + ':';
     var MAX_CACHE_LENGTH = 1500000;
@@ -399,6 +399,13 @@
                 mapped = mapValue(value);
             }
             declarations += property + ':' + mapped + (style.getPropertyPriority(property) ? ' !important' : '') + ';';
+        }
+
+        // A rule that only sets a brand-coloured background (a primary button)
+        // takes its white text from a more general rule, which the light
+        // theme maps to anthracite. Keep the text white here as well.
+        if (keepText && !keepAll && !style.getPropertyValue('color')) {
+            declarations += 'color:#fff;';
         }
 
         var nested = rule.cssRules && rule.cssRules.length ? walk(rule.cssRules) : '';
