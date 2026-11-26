@@ -101,14 +101,31 @@ html[data-neos-theme="light"] [class*="_dropDown__item"]:has(> [class*="_selectB
 }
 
 /*
- * Light: the bottom bar of the hamburger icon is a background in
- * currentColor on ::after. Chrome does not always repaint it when the colour
- * changes, so it could keep the white of dark mode. Draw it as a border, like
- * the two bars above it; same position and size.
+ * Light: the hamburger icon. Its three bars take their colour from
+ * currentColor (borders on ::before, a background on ::after). Chrome does
+ * not always restyle the pseudo-elements when the inherited colour changes
+ * (theme switch, menu or sidebar toggled), so the bottom bar could keep the
+ * white of dark mode. Give the bars explicit colours per state instead: the
+ * mapped grey by default, brand blue when active or hovered, as in Neos.
+ * The bottom bar is drawn as a border like the two above it; same position
+ * and size.
  */
+html[data-neos-theme="light"] [class*="_menuToggler__icon"]::before,
+html[data-neos-theme="light"] [class*="_menuToggler__icon"]::after {
+    border-color: rgb(60, 60, 60);
+}
+
+html[data-neos-theme="light"] [class*="_menuToggler--isActive"] [class*="_menuToggler__icon"]::before,
+html[data-neos-theme="light"] [class*="_menuToggler--isActive"] [class*="_menuToggler__icon"]::after,
+html[data-neos-theme="light"] [class*="_menuToggler__icon"]:hover::before,
+html[data-neos-theme="light"] [class*="_menuToggler__icon"]:hover::after {
+    border-color: #00adee;
+}
+
 html[data-neos-theme="light"] [class*="_menuToggler__icon"]::after {
     height: 0;
-    border-top: 3px solid;
+    border-top-width: 3px;
+    border-top-style: solid;
     background-color: transparent;
 }
 
