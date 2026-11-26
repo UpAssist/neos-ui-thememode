@@ -24,7 +24,7 @@
     }
 
     // Bump when the mapping changes: it is part of the twin cache key.
-    var VERSION = '6';
+    var VERSION = '7';
     var STORAGE_KEY = 'upassist.neos.themeMode';
     var CACHE_PREFIX = 'upassist.neos.themeMode.css.v' + VERSION + ':';
     var MAX_CACHE_LENGTH = 1500000;
@@ -341,6 +341,12 @@
         return rgba[3] > 0.6 && hsl[1] <= 0.2 && hsl[2] * 255 >= 200;
     }
 
+    function isPseudoOnly(selectorText) {
+        return selectorText.split(',').every(function (selector) {
+            return /::?(before|after)\s*$/i.test(selector);
+        });
+    }
+
     // Near-black text on those surfaces gets the same anthracite as the rest
     // of the light theme.
     function softenColors(value) {
@@ -371,8 +377,12 @@
         var background = firstColor(backgroundValue);
         // White text on a brand-coloured background stays white.
         var keepText = background !== null && isAccent(background);
-        // Light surfaces and light widgets keep their colours.
-        var keepAll = LIGHT_WIDGETS.test(rule.selectorText) || (background !== null && isLightSurface(background));
+        // Light surfaces and light widgets keep their colours. A white
+        // ::before/::after is not a surface but a mark drawn in the text
+        // colour (the bottom bar of the module hamburger, a checked radio dot,
+        // a select arrow), so it is mapped like text.
+        var keepAll = LIGHT_WIDGETS.test(rule.selectorText)
+            || (background !== null && isLightSurface(background) && !isPseudoOnly(rule.selectorText));
 
         for (var i = 0; i < style.length; i++) {
             var property = style[i];

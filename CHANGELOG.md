@@ -4,6 +4,10 @@ All notable changes to this package are documented in this file. The format is b
 
 ## [Unreleased]
 
+### Fixed
+
+- The bottom bar of the hamburger icon in the backend modules stayed white in light mode. Neos draws it as a white `::after` block, which the engine took for a light surface and left as it was. A white `::before`/`::after` is now treated as a mark and mapped like text; this also fixes the checked radio dot, the select arrow and the hidden-page marker in the tree.
+
 ### Changed
 
 - Coloured buttons (primary, success, warning, danger) in light mode have white text, as in dark mode, instead of anthracite text that turned white on hover. On hover they fade to a darker shade of their own colour. The engine now keeps the text white in any rule that only sets a brand-coloured background.
