@@ -140,3 +140,43 @@ html[data-neos-theme="light"] .neos-branding-logo {
 html[data-neos-theme="light"] .neos-branding-logo > * {
     display: none;
 }
+
+/*
+ * Light: coloured buttons (primary, success, warning, danger) keep white
+ * text (the engine sees to that) and on hover fade to a darker shade of
+ * their own colour, instead of staying the same.
+ */
+html[data-neos-theme="light"] .neos .neos-button,
+html[data-neos-theme="light"] .neos button {
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+/*
+ * The engine keeps the text white in the rule that sets the colour, but
+ * `.neos.neos-module .neos-button` comes later with the same weight and maps
+ * it to anthracite again. Buttons in table rows are grey until hovered and
+ * keep the mapped text.
+ */
+html[data-neos-theme="light"] .neos :is(.neos-button, button):is(.neos-button-primary, .neos-button-success, .neos-button-warning, .neos-button-danger):not(td > *, td > form > *, td .neos-pull-right *) {
+    color: #fff;
+}
+
+html[data-neos-theme="light"] .neos .neos-button.neos-button-primary:not([disabled]):not(.neos-disabled):is(:hover, :active),
+html[data-neos-theme="light"] .neos button.neos-button-primary:not([disabled]):not(.neos-disabled):is(:hover, :active) {
+    background-color: color-mix(in srgb, #00b5ff 82%, #000);
+}
+
+html[data-neos-theme="light"] .neos .neos-button.neos-button-success:not([disabled]):not(.neos-disabled):is(:hover, :active),
+html[data-neos-theme="light"] .neos button.neos-button-success:not([disabled]):not(.neos-disabled):is(:hover, :active) {
+    background-color: color-mix(in srgb, #00a338 82%, #000);
+}
+
+html[data-neos-theme="light"] .neos .neos-button.neos-button-warning:not([disabled]):not(.neos-disabled):is(:hover, :active),
+html[data-neos-theme="light"] .neos button.neos-button-warning:not([disabled]):not(.neos-disabled):is(:hover, :active) {
+    background-color: color-mix(in srgb, #ff8700 82%, #000);
+}
+
+html[data-neos-theme="light"] .neos .neos-button.neos-button-danger:not([disabled]):not(.neos-disabled):is(:hover, :active),
+html[data-neos-theme="light"] .neos button.neos-button-danger:not([disabled]):not(.neos-disabled):is(:hover, :active) {
+    background-color: color-mix(in srgb, #ff460d 82%, #000);
+}
